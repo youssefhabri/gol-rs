@@ -5,7 +5,7 @@ use crate::cell::Cell;
 use crate::consts::{BLACK, CELL_SIZE, GREY, X_CELLS_NUM, Y_CELLS_NUM};
 use crate::context::GameState;
 use crate::GameContext;
-use piston::input::{Button, Event, Input, UpdateArgs};
+use piston::input::{Button, Event, Input, MouseButton, UpdateArgs};
 
 pub type Cells = [[Cell; X_CELLS_NUM]; Y_CELLS_NUM];
 
@@ -63,9 +63,15 @@ impl Grid {
     }
 
     pub fn process_input(&mut self, context: &GameContext, button: Button) {
-        for y in 0..Y_CELLS_NUM {
-            for x in 0..X_CELLS_NUM {
-                self.cells[y][x].process_input(&context, button);
+        if let Button::Mouse(mouse_btn) = button {
+            if mouse_btn == MouseButton::Left && context.state == GameState::Paused {
+                let cursor_pos = context.mouse_position;
+                let x = cursor_pos[0] as usize / CELL_SIZE;
+                let y = cursor_pos[1] as usize / CELL_SIZE;
+
+                if x < X_CELLS_NUM && y < Y_CELLS_NUM {
+                    self.cells[y][x].toggle();
+                }
             }
         }
     }

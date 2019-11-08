@@ -29,18 +29,7 @@ impl Cell {
         self.position.1
     }
 
-    pub fn process_input(&mut self, context: &GameContext, button: Button) {
-        if let Button::Mouse(mouse_btn) = button {
-            if mouse_btn == MouseButton::Left && context.state == GameState::Paused {
-                let cursor_pos = context.mouse_position;
-                if cursor_pos[0] > self.x()
-                    && cursor_pos[0] < self.x() + CELL_SIZE as f64
-                    && cursor_pos[1] > self.y()
-                    && cursor_pos[1] < self.y() + CELL_SIZE as f64
-                {
-                    self.alive = !self.alive;
-                }
-            }
-        }
+    pub fn toggle(&mut self) {
+        self.alive = !self.alive;
     }
 }
